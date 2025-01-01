@@ -16,6 +16,9 @@ public class UIManager : MonoBehaviour
     public GameObject SoundManager;
     [SerializeField]
     BoolVariable isPause;
+    [SerializeField]
+    BoolVariable isMute;
+
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,12 +32,24 @@ public class UIManager : MonoBehaviour
         PreviousButton.SetActive(true);
 
         isPause.OnValueChanged += onPlayButtonPressed;
+        isMute.OnValueChanged += onMuteButtonPressed;
     }
 
     void OnDestroy()
     {
         isPause.OnValueChanged -= onPlayButtonPressed;
+        isMute.OnValueChanged-= onMuteButtonPressed;
     }
+
+    void onMuteButtonPressed(bool isMute)
+    {
+        if(isMute==true)
+            Mute();
+        else
+            UnMute();
+    }
+
+
     void onPlayButtonPressed(bool isPause)
     {
         if(isPause == true )
@@ -42,7 +57,6 @@ public class UIManager : MonoBehaviour
         else
             Play();
     }
-
     // Update is called once per frame
     
 
@@ -68,7 +82,8 @@ public class UIManager : MonoBehaviour
     {
         // Mute Audio
         MuteButton.SetActive(false);
-        UnMuteButton.SetActive(true);     
+        UnMuteButton.SetActive(true);  
+        isMute.Value = true;   
         //SoundManager.SendMessage("Mute");   
     }
 
@@ -77,7 +92,7 @@ public class UIManager : MonoBehaviour
         // UnMute Audio
         MuteButton.SetActive(true);
         UnMuteButton.SetActive(false);
-
+        isMute.Value = false;
         //SoundManager.SendMessage("UnMute");
     }
 

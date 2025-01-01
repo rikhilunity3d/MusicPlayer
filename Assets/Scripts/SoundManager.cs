@@ -14,7 +14,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField]
     BoolVariable isPause;
 
-    
+    [SerializeField]
+    BoolVariable isMute;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,22 +25,22 @@ public class SoundManager : MonoBehaviour
 
         isPause.OnValueChanged += OnPauseValueChanged;
 
-    }
+        isMute.OnValueChanged += OnMuteValueChanged;
 
+    }
     void OnDestory()
     {
         isPause.OnValueChanged-= OnPauseValueChanged;
+
+        isMute.OnValueChanged -= OnMuteValueChanged;
     }
 
-    private void OnPauseValueChanged(bool isPause)
-    {
-        Pause(isPause);
-    }
+    private void OnPauseValueChanged(bool isPause) => Pause(isPause);
 
-    void Play()
-    {
-        audioSource.Play();
-    }
+    private void OnMuteValueChanged(bool isMute) => Mute(isMute);
+    
+
+    void Play() => audioSource.Play();
 
     void Pause(bool isPause)
     {
@@ -49,21 +50,10 @@ public class SoundManager : MonoBehaviour
             Play();
     }
 
-    void Stop()
-    {
-        audioSource.Stop();
-    }
+    void Stop() => audioSource.Stop();
 
-    void Mute()
-    {
-        audioSource.mute=true;
-    }
-
-    void UnMute()
-    {
-        audioSource.mute=false;
-    }
-
+    void Mute(bool isMute) => audioSource.mute=isMute;
+    
     public void Previous()
     {
         Stop();

@@ -307,6 +307,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4e17d17d6f9124e77b274573166cc3cd, type: 3}
   - {fileID: 8300000, guid: aa0f4563bdcbf4ce4972a5c35cdf7db2, type: 3}
   isPause: {fileID: 11400000, guid: 9a0f46886e2194d5cb068f6980fd2776, type: 2}
+  isMute: {fileID: 11400000, guid: 28c7d9d75527f4a6eae6f75522df2598, type: 2}
 --- !u!82 &404365587
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1090,6 +1091,7 @@ MonoBehaviour:
   PreviousButton: {fileID: 2038354970}
   SoundManager: {fileID: 404365584}
   isPause: {fileID: 11400000, guid: 9a0f46886e2194d5cb068f6980fd2776, type: 2}
+  isMute: {fileID: 11400000, guid: 28c7d9d75527f4a6eae6f75522df2598, type: 2}
 --- !u!1 &1311707911
 GameObject:
   m_ObjectHideFlags: 0
