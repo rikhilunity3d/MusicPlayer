@@ -3,10 +3,10 @@ using Obvious.Soap;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    
     public GameObject PlayButton;
     public GameObject PauseButton;
     public GameObject MuteButton;
@@ -14,12 +14,11 @@ public class UIManager : MonoBehaviour
     public GameObject NextButton;
     public GameObject PreviousButton;
     public GameObject SoundManager;
+    
     [SerializeField]
     BoolVariable isPause;
     [SerializeField]
     BoolVariable isMute;
-
-    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,17 +30,17 @@ public class UIManager : MonoBehaviour
         NextButton.SetActive(true);
         PreviousButton.SetActive(true);
 
-        isPause.OnValueChanged += onPlayButtonPressed;
-        isMute.OnValueChanged += onMuteButtonPressed;
+        isPause.OnValueChanged += OnPlayButtonPressed;
+        isMute.OnValueChanged += OnMuteButtonPressed;
     }
 
     void OnDestroy()
     {
-        isPause.OnValueChanged -= onPlayButtonPressed;
-        isMute.OnValueChanged-= onMuteButtonPressed;
+        isPause.OnValueChanged -= OnPlayButtonPressed;
+        isMute.OnValueChanged-= OnMuteButtonPressed;
     }
 
-    void onMuteButtonPressed(bool isMute)
+    void OnMuteButtonPressed(bool isMute)
     {
         if(isMute==true)
             Mute();
@@ -50,7 +49,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    void onPlayButtonPressed(bool isPause)
+    void OnPlayButtonPressed(bool isPause)
     {
         if(isPause == true )
             Pause();

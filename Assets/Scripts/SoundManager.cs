@@ -2,18 +2,17 @@ using UnityEngine;
 using UnityEngine.TextCore;
 using Obvious.Soap;
 using System;
+using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
+    public Slider slider;
     [SerializeField] 
     AudioClip[] audioClips;
-
     int currentTrack = 0;
     AudioSource audioSource;
-
     [SerializeField]
     BoolVariable isPause;
-
     [SerializeField]
     BoolVariable isMute;
     
@@ -28,10 +27,15 @@ public class SoundManager : MonoBehaviour
         isMute.OnValueChanged += OnMuteValueChanged;
 
     }
+
+    void Update()
+    {
+        slider.value = Math.Clamp(audioSource.time/100,0,audioSource.time);
+    }
+
     void OnDestory()
     {
         isPause.OnValueChanged-= OnPauseValueChanged;
-
         isMute.OnValueChanged -= OnMuteValueChanged;
     }
 
