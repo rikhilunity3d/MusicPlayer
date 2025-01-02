@@ -13,12 +13,17 @@ public class UIManager : MonoBehaviour
     public GameObject UnMuteButton;
     public GameObject NextButton;
     public GameObject PreviousButton;
-    public GameObject SoundManager;
+
+    public Slider  slider;
+    //public GameObject SoundManager;
     
     [SerializeField]
     BoolVariable isPause;
     [SerializeField]
     BoolVariable isMute;
+
+    [SerializeField]
+    FloatVariable sliderCurrentValue;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,12 +37,19 @@ public class UIManager : MonoBehaviour
 
         isPause.OnValueChanged += OnPlayButtonPressed;
         isMute.OnValueChanged += OnMuteButtonPressed;
+        sliderCurrentValue.OnValueChanged += OnSliderValueUpdate;
+    }
+
+     void OnSliderValueUpdate(float value)
+    {
+        slider.value = value;           
     }
 
     void OnDestroy()
     {
         isPause.OnValueChanged -= OnPlayButtonPressed;
         isMute.OnValueChanged-= OnMuteButtonPressed;
+        sliderCurrentValue.OnValueChanged-= OnSliderValueUpdate;
     }
 
     void OnMuteButtonPressed(bool isMute)

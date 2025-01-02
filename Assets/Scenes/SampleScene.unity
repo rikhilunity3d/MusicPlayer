@@ -339,12 +339,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d917ecd14b1f48f086496317049742d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 1553808531}
   audioClips:
   - {fileID: 8300000, guid: 01d5770cb04614155811de2dbf888a87, type: 3}
   - {fileID: 8300000, guid: 4e17d17d6f9124e77b274573166cc3cd, type: 3}
   - {fileID: 8300000, guid: aa0f4563bdcbf4ce4972a5c35cdf7db2, type: 3}
   isPause: {fileID: 11400000, guid: 9a0f46886e2194d5cb068f6980fd2776, type: 2}
   isMute: {fileID: 11400000, guid: 28c7d9d75527f4a6eae6f75522df2598, type: 2}
+  sliderCurrentValue: {fileID: 11400000, guid: d6f627f889ab040e19a416b7ef2d4852, type: 2}
 --- !u!82 &404365587
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1201,8 +1203,11 @@ MonoBehaviour:
   UnMuteButton: {fileID: 972318524}
   NextButton: {fileID: 1829472110}
   PreviousButton: {fileID: 2038354970}
+  slider: {fileID: 1553808531}
+  SoundManager: {fileID: 0}
   isPause: {fileID: 11400000, guid: 9a0f46886e2194d5cb068f6980fd2776, type: 2}
   isMute: {fileID: 11400000, guid: 28c7d9d75527f4a6eae6f75522df2598, type: 2}
+  sliderCurrentValue: {fileID: 11400000, guid: d6f627f889ab040e19a416b7ef2d4852, type: 2}
 --- !u!1 &1311707911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,7 +1921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
