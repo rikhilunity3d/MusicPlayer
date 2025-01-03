@@ -1,8 +1,5 @@
-using System;
 using Obvious.Soap;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -15,7 +12,6 @@ public class UIManager : MonoBehaviour
     public GameObject PreviousButton;
 
     public Slider  slider;
-    //public GameObject SoundManager;
     
     [SerializeField]
     BoolVariable isPause;

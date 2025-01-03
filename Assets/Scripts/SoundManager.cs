@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.TextCore;
 using Obvious.Soap;
-using System;
-using UnityEngine.UI;
 using System.Threading.Tasks;
+using System;
 
 public class SoundManager : MonoBehaviour
 {
@@ -16,9 +14,11 @@ public class SoundManager : MonoBehaviour
     BoolVariable isPause;
     [SerializeField]
     BoolVariable isMute;
-
     [SerializeField]
     FloatVariable sliderCurrentValue;
+
+    [SerializeField]
+    StringVariable songName;
 
     private bool isUpdating = false;
 
@@ -29,10 +29,7 @@ public class SoundManager : MonoBehaviour
         audioSource.clip = audioClips[0];
 
         isPause.OnValueChanged += OnPauseValueChanged;
-
         isMute.OnValueChanged += OnMuteValueChanged;
-
-
 
     }
 
@@ -53,13 +50,14 @@ public class SoundManager : MonoBehaviour
         isUpdating = true; // Enable updates when the component starts
         StartUpdatingSlider();
 
+        UpdateSongName();
+
     }
 
     private async void StartUpdatingSlider()
     {
         if (!isUpdating || audioSource == null)
             return;
-
         // Update the slider value
         sliderCurrentValue.Value = Mathf.Clamp(audioSource.time / 100, 0, audioSource.clip.length);
 
@@ -68,6 +66,14 @@ public class SoundManager : MonoBehaviour
 
         // Recursively call the method to continue updates
         StartUpdatingSlider();
+
+        
+    }
+
+    private void UpdateSongName()
+    {
+        songName.Value = audioSource.clip.name;
+        Debug.Log("Clip Name"+" "+audioSource.clip.name);
     }
 
     private void OnDisable()
@@ -109,9 +115,9 @@ public class SoundManager : MonoBehaviour
             currentTrack--;
 
         audioSource.clip = audioClips[currentTrack];
+        UpdateSongName();
 
         Pause(isPause);
-
     }
 
     public void Next()
@@ -124,9 +130,8 @@ public class SoundManager : MonoBehaviour
             currentTrack++;
 
         audioSource.clip = audioClips[currentTrack];
-
+        UpdateSongName();
         Pause(isPause);
-
     }
 
 }
