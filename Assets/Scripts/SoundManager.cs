@@ -56,7 +56,7 @@ public class SoundManager : MonoBehaviour
 
     private async void StartUpdatingSlider()
     {
-        if (!isUpdating || audioSource == null)
+        if (!isUpdating || audioSource == null || sliderCurrentValue.Value == 0)
             return;
         // Update the slider value
         sliderCurrentValue.Value = Mathf.Clamp(audioSource.time / 100, 0, audioSource.clip.length);
