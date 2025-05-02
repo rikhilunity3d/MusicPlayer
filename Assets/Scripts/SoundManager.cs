@@ -20,6 +20,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField]
     StringVariable songName;
 
+    [SerializeField]
+    AartiLyricsData aartiLyricsData;
+
+
     private bool isUpdating = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -56,7 +60,7 @@ public class SoundManager : MonoBehaviour
 
     private async void StartUpdatingSlider()
     {
-        if (!isUpdating || audioSource == null || sliderCurrentValue.Value == 0)
+        if (!isUpdating || audioSource == null)
             return;
         // Update the slider value
         sliderCurrentValue.Value = Mathf.Clamp(audioSource.time / 100, 0, audioSource.clip.length);
@@ -72,8 +76,10 @@ public class SoundManager : MonoBehaviour
 
     private void UpdateSongName()
     {
-        songName.Value = audioSource.clip.name;
-        Debug.Log("Clip Name"+" "+audioSource.clip.name);
+       //songName.Value = audioSource.clip.name;
+       songName.Value = aartiLyricsData.aartiTitle;
+        //Debug.Log("Clip Name"+" "+audioSource.clip.name);
+        Debug.Log("Clip Name"+" "+aartiLyricsData.aartiTitle);
     }
 
     private void OnDisable()
