@@ -2,6 +2,7 @@ using UnityEngine;
 using Obvious.Soap;
 using System.Threading.Tasks;
 using System;
+using UnityEngine.Rendering;
 
 public class SoundManager : MonoBehaviour
 {
@@ -21,15 +22,23 @@ public class SoundManager : MonoBehaviour
     StringVariable songName;
 
     [SerializeField]
+    StringVariable songLyricsSync;
+
+    [SerializeField]
     private AartiLyricsData aartiLyricsData;
 
     private bool isUpdating = false;
+
+    private int currentLineIndex = 0;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = audioClips[0];
+        //audioSource.clip = audioClips[0];
+
+        audioSource.clip = aartiLyricsData.aartiAudioClip;
 
         isPause.OnValueChanged += OnPauseValueChanged;
         isMute.OnValueChanged += OnMuteValueChanged;
@@ -55,21 +64,25 @@ public class SoundManager : MonoBehaviour
 
         UpdateSongName();
 
-        SyncLyrics();
 
     }
 
-    private void SyncLyrics()
+    private async Task SyncLyrics()
     {
-        if (lyricsData != null)
+        while (isUpdating && currentLineIndex < aartiLyricsData.syncedLyrics.Count)
         {
-            titleText.text = aartiLyricsData.aartiTitle;
-            lyricsText.text = ""; // Start empty
-            if (aartiLyricsData.aartiAudioClip != null)
-            {
-                audioSource.clip = aartiLyricsData.aartiAudioClip;
-                audioSource.Play();
-            }
+            var nextLine = aartiLyricsData.syncedLyrics[currentLineIndex];
+            float waitTime = nextLine.time - audioSource.time;
+
+            if (waitTime > 0)
+                await Task.Delay((int)(waitTime * 1000));
+
+            // Safety check in case audio was stopped or user skipped
+            if (!isUpdating || audioSource.time < nextLine.time - 0.2f)
+                continue;
+
+            songLyricsSync.Value = nextLine.line;
+            currentLineIndex++;
         }
     }
 
@@ -79,14 +92,15 @@ public class SoundManager : MonoBehaviour
             return;
         // Update the slider value
         sliderCurrentValue.Value = Mathf.Clamp(audioSource.time / 100, 0, audioSource.clip.length);
+        
+        
+        await SyncLyrics();
 
         // Wait for a short interval before updating again
         await Task.Delay(100); // Adjust the delay as needed (in milliseconds)
 
         // Recursively call the method to continue updates
         StartUpdatingSlider();
-
-        
     }
 
     private void UpdateSongName()

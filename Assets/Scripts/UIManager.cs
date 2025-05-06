@@ -14,7 +14,6 @@ public class UIManager : MonoBehaviour
     public GameObject PreviousButton;
 
     public Slider  slider;
-    public TextMeshProUGUI lyricsText;
 
     [SerializeField]
     BoolVariable isPause;
