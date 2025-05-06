@@ -295,6 +295,57 @@ RectTransform:
   m_AnchoredPosition: {x: -5.000122, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &340613605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 340613607}
+  - component: {fileID: 340613606}
+  m_Layer: 0
+  m_Name: LyricsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &340613606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340613605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e0ec1a0c35c4616b91060b74b04f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lyricsData: {fileID: 0}
+  lyricsText: {fileID: 1454043811}
+  titleText: {fileID: 0}
+  audioSource: {fileID: 0}
+  isPause: {fileID: 11400000, guid: 9a0f46886e2194d5cb068f6980fd2776, type: 2}
+  isMute: {fileID: 0}
+  currentLineIndex: 0
+--- !u!4 &340613607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340613605}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &404365584
 GameObject:
   m_ObjectHideFlags: 0
@@ -2463,3 +2514,4 @@ SceneRoots:
   - {fileID: 1170699950}
   - {fileID: 55541600}
   - {fileID: 438242329}
+  - {fileID: 340613607}
