@@ -20,7 +20,7 @@ MonoBehaviour:
     \u0917\u0923\u0947\u0936 \u091C\u092F \u0917\u0923\u0947\u0936 \u0926\u0947\u0935\u093E\n\n\n\u092E\u093E\u0924\u093E
     \u091C\u093E\u0915\u0940 \u092A\u093E\u0930\u094D\u0935\u0924\u0940, \u092A\u093F\u0924\u093E
     \u092E\u0939\u093E\u0926\u0947\u0935\u093E"
-  aartiAudioClip: {fileID: 0}
+  aartiAudioClip: {fileID: 8300000, guid: d45eda910bc2d4deb9e086ce7f64c7c1, type: 3}
   syncedLyrics:
   - time: 0.3
     line: "\u091C\u092F \u0917\u0923\u0947\u0936 \u091C\u092F \u0917\u0923\u0947\u0936

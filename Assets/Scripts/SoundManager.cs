@@ -21,8 +21,7 @@ public class SoundManager : MonoBehaviour
     StringVariable songName;
 
     [SerializeField]
-    AartiLyricsData aartiLyricsData;
-
+    private AartiLyricsData aartiLyricsData;
 
     private bool isUpdating = false;
 
@@ -56,6 +55,22 @@ public class SoundManager : MonoBehaviour
 
         UpdateSongName();
 
+        SyncLyrics();
+
+    }
+
+    private void SyncLyrics()
+    {
+        if (lyricsData != null)
+        {
+            titleText.text = aartiLyricsData.aartiTitle;
+            lyricsText.text = ""; // Start empty
+            if (aartiLyricsData.aartiAudioClip != null)
+            {
+                audioSource.clip = aartiLyricsData.aartiAudioClip;
+                audioSource.Play();
+            }
+        }
     }
 
     private async void StartUpdatingSlider()

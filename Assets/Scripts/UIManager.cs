@@ -1,6 +1,8 @@
 using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 
 public class UIManager : MonoBehaviour
 {
@@ -12,7 +14,8 @@ public class UIManager : MonoBehaviour
     public GameObject PreviousButton;
 
     public Slider  slider;
-    
+    public TextMeshProUGUI lyricsText;
+
     [SerializeField]
     BoolVariable isPause;
     [SerializeField]
