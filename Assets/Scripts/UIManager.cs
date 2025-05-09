@@ -19,9 +19,10 @@ public class UIManager : MonoBehaviour
     BoolVariable isPause;
     [SerializeField]
     BoolVariable isMute;
-
-    [SerializeField]
-    FloatVariable sliderCurrentValue;
+    [SerializeField] private FloatVariable AudioCurrentLength;
+    [SerializeField] private FloatVariable AudioLength;
+    //[SerializeField]
+    //FloatVariable sliderCurrentValue;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,19 +36,20 @@ public class UIManager : MonoBehaviour
 
         isPause.OnValueChanged += OnPlayButtonPressed;
         isMute.OnValueChanged += OnMuteButtonPressed;
-        sliderCurrentValue.OnValueChanged += OnSliderValueUpdate;
+        AudioCurrentLength.OnValueChanged += OnSliderValueUpdate;
     }
 
      void OnSliderValueUpdate(float value)
     {
+        slider.maxValue = AudioLength.Value;
         slider.value = value;           
     }
 
     void OnDestroy()
     {
         isPause.OnValueChanged -= OnPlayButtonPressed;
-        isMute.OnValueChanged-= OnMuteButtonPressed;
-        sliderCurrentValue.OnValueChanged-= OnSliderValueUpdate;
+        isMute.OnValueChanged -= OnMuteButtonPressed;
+        AudioCurrentLength.OnValueChanged -= OnSliderValueUpdate;
     }
 
     void OnMuteButtonPressed(bool isMute)

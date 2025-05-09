@@ -2,144 +2,137 @@ using UnityEngine;
 using Obvious.Soap;
 using System.Threading.Tasks;
 using System;
-using UnityEngine.Rendering;
+using System.Runtime.InteropServices;
 
 public class SoundManager : MonoBehaviour
 {
- //   public Slider slider;
-    [SerializeField]
-    AudioClip[] audioClips;
-    int currentTrack = 0;
-    AudioSource audioSource;
-    [SerializeField]
-    BoolVariable isPause;
-    [SerializeField]
-    BoolVariable isMute;
-    [SerializeField]
-    FloatVariable sliderCurrentValue;
+    [Header("Audio Setup")]
+    [SerializeField] private AudioClip[] audioClips; // Optional playlist
+    private int currentTrack = 0;
+    private AudioSource audioSource;
 
-    [SerializeField]
-    StringVariable songName;
-
-    [SerializeField]
-    StringVariable songLyricsSync;
-
-    [SerializeField]
-    private AartiLyricsData aartiLyricsData;
+    [Header("Scriptable Variables")]
+    [SerializeField] private BoolVariable isPause;
+    [SerializeField] private BoolVariable isMute;
+    [SerializeField] private FloatVariable audioCurrentLength;
+    [SerializeField] private StringVariable stringAudioCurrentLength;
+    [SerializeField] private FloatVariable audioLength;
+    [SerializeField] private StringVariable stringAudioLength;
+    [SerializeField] private StringVariable songName;
+    [SerializeField] private StringVariable songLyricsSync;
+    [Header("Lyrics Data")]
+    [SerializeField] private AartiLyricsData aartiLyricsData;
 
     private bool isUpdating = false;
-
     private int currentLineIndex = 0;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        //audioSource.clip = audioClips[0];
-
         audioSource.clip = aartiLyricsData.aartiAudioClip;
 
+        // Subscribe to changes in pause/mute state
         isPause.OnValueChanged += OnPauseValueChanged;
         isMute.OnValueChanged += OnMuteValueChanged;
-
-    }
-
-    void OnDestory()
-    {
-        isPause.OnValueChanged -= OnPauseValueChanged;
-        isMute.OnValueChanged -= OnMuteValueChanged;
-    }
-
-    private void OnPauseValueChanged(bool isPause) => Pause(isPause);
-
-    private void OnMuteValueChanged(bool isMute) => Mute(isMute);
-
-
-    void Play()
-    {
-        audioSource.Play();
-        isUpdating = true; // Enable updates when the component starts
-        StartUpdatingSlider();
-
-        UpdateSongName();
-
-
-    }
-
-    private async Task SyncLyrics()
-    {
-        while (isUpdating && currentLineIndex < aartiLyricsData.syncedLyrics.Count)
-        {
-            var nextLine = aartiLyricsData.syncedLyrics[currentLineIndex];
-            float waitTime = nextLine.time - audioSource.time;
-
-            if (waitTime > 0)
-                await Task.Delay((int)(waitTime * 1000));
-
-            // Safety check in case audio was stopped or user skipped
-            if (!isUpdating || audioSource.time < nextLine.time - 0.2f)
-                continue;
-
-            songLyricsSync.Value = nextLine.line;
-            currentLineIndex++;
-        }
-    }
-
-    private async void StartUpdatingSlider()
-    {
-        if (!isUpdating || audioSource == null)
-            return;
-        // Update the slider value
-        sliderCurrentValue.Value = Mathf.Clamp(audioSource.time / 100, 0, audioSource.clip.length);
-        
-        
-        await SyncLyrics();
-
-        // Wait for a short interval before updating again
-        await Task.Delay(100); // Adjust the delay as needed (in milliseconds)
-
-        // Recursively call the method to continue updates
-        StartUpdatingSlider();
-    }
-
-    private void UpdateSongName()
-    {
-       //songName.Value = audioSource.clip.name;
-       songName.Value = aartiLyricsData.aartiTitle;
-        //Debug.Log("Clip Name"+" "+audioSource.clip.name);
-        Debug.Log("Clip Name"+" "+aartiLyricsData.aartiTitle);
-    }
-
-    private void OnDisable()
-    {
-        isUpdating = false; // Stop updates when the component is disabled
+        audioCurrentLength.OnValueChanged += SyncLyrics;
     }
 
     private void OnDestroy()
     {
-        isUpdating = false; // Stop updates when the object is destroyed
+        isPause.OnValueChanged -= OnPauseValueChanged;
+        isMute.OnValueChanged -= OnMuteValueChanged;
+        audioCurrentLength.OnValueChanged -= SyncLyrics;
+        isUpdating = false;
     }
 
-    void Pause(bool isPause)
+    private void SyncLyrics(float currentTime)
     {
-        if (isPause == true)
+        //songLyricsSync.Value = aartiLyricsData.syncedLyrics[currentLineIndex].line;
+
+        string str = FormatFullTime(currentTime);
+
+        if (currentLineIndex < aartiLyricsData.syncedLyrics.Count && stringAudioCurrentLength.Value.Equals(aartiLyricsData.syncedLyrics[currentLineIndex].time))
         {
-            audioSource.Pause();
-            isUpdating = false; // Stop updates when the object is destroyed            
+            //Debug.Log($"Calling SyncLyrics {currentTime} Current Time in time: {stringAudioCurrentLength.Value} equal {aartiLyricsData.syncedLyrics[currentLineIndex].time}");
+            songLyricsSync.Value = aartiLyricsData.syncedLyrics[currentLineIndex].line;
+            currentLineIndex++;
         }
-        else
-            Play();
     }
 
-    void Stop()
+    private void OnDisable()
     {
-        isUpdating = false; // Stop updates when the component is disabled
+        isUpdating = false;
+    }
+
+    // Event handlers for external state change
+    private void OnPauseValueChanged(bool isPaused) => Pause(isPaused);
+    private void OnMuteValueChanged(bool isMuted) => Mute(isMuted);
+
+    // Start playing the aarti and begin lyric syncing
+    private void Play()
+    {
+        if (audioSource.clip == null)
+        {
+            Debug.LogWarning("Audio clip not assigned!");
+            return;
+        }
+
+        audioSource.Play();
+        isUpdating = true;
+
+        currentLineIndex = 0;       // Async start lyrics syncing
+        StartUpdatingSlider();       // Slider update in parallel
+        UpdateSongName();
+    }
+
+    // Stop the audio and syncing
+    private void Stop()
+    {
+        isUpdating = false;
         audioSource.Stop();
     }
 
-    void Mute(bool isMute) => audioSource.mute = isMute;
+    // Pause or resume playback
+    private void Pause(bool isPaused)
+    {
+        if (isPaused)
+        {
+            audioSource.Pause();
+            isUpdating = false;
+        }
+        else
+        {
+            Play();
+        }
+    }
 
+    // Mute audio
+    private void Mute(bool isMuted) => audioSource.mute = isMuted;
+
+    // Update the synced song name
+    private void UpdateSongName()
+    {
+        songName.Value = aartiLyricsData.aartiTitle;
+        Debug.Log("Now Playing: " + aartiLyricsData.aartiTitle);
+    }
+
+    // Continuously updates the slider value based on audio time
+    private async void StartUpdatingSlider()
+    {
+        Debug.Log($"audio Source.time: {audioSource.time} | AudioSource Lenght: {audioSource.clip.length}");
+
+        while (isUpdating && audioSource != null && audioSource.isPlaying)
+        {
+            stringAudioLength.Value = FormatFullTime(audioSource.clip.length);
+            audioLength.Value = audioSource.clip.length / 60;
+            
+            stringAudioCurrentLength.Value = FormatFullTime(audioSource.time);
+            audioCurrentLength.Value = audioSource.time / 60;
+            await Task.Delay(100); // Update every 0.1s
+        }
+    }
+
+    // Play the previous track in the list
     public void Previous()
     {
         Stop();
@@ -151,10 +144,10 @@ public class SoundManager : MonoBehaviour
 
         audioSource.clip = audioClips[currentTrack];
         UpdateSongName();
-
-        Pause(isPause);
+        Pause(isPause); // Resume if not paused
     }
 
+    // Play the next track in the list
     public void Next()
     {
         Stop();
@@ -166,7 +159,12 @@ public class SoundManager : MonoBehaviour
 
         audioSource.clip = audioClips[currentTrack];
         UpdateSongName();
-        Pause(isPause);
+        Pause(isPause); // Resume if not paused
     }
 
+    public string FormatFullTime(float seconds)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(seconds);
+        return time.ToString(@"hh\:mm\:ss");
+    }
 }

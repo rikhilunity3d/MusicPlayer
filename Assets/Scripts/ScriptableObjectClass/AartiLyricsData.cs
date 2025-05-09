@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,13 +8,12 @@ public class AartiLyricsData : ScriptableObject
     public string aartiTitle;
     [TextArea(5, 20)]
     public string lyrics;
-
     public AudioClip aartiAudioClip;
 
     [System.Serializable]
     public class TimedLine
     {
-        public float time; // in seconds
+        public string time="00:00:00"; // in seconds
         public string line;
     }
 
